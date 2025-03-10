@@ -4,11 +4,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/stylemedia.css">
+    
+    <!-- Критические стили -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap');
+        /* Основные стили, необходимые для первого экрана */
+        :root {
+            --primary-color: #ffe600;
+            --text-color: #fff;
+            --bg-gradient: linear-gradient(135deg, rgba(28,59,69,1) 0%, rgba(0,25,77,1) 50%, rgba(42,5,209,1) 100%);
+        }
+        
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            color: var(--text-color);
+        }
+        
+        .wrapper {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1500px;
+            max-width: 95%;
+            margin: 0 auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        
+        header {
+            padding: 50px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 0;
+        }
     </style>
+    
+    <!-- Остальные стили -->
+    <link rel="stylesheet" href="assets/css/style.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/css/stylemedia.css" media="print" onload="this.media='all'">
+    
+    <!-- Предзагрузка шрифтов -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap">
+    </noscript>
     <title>Game WebSite</title>
 </head>
 
@@ -40,7 +90,7 @@
                 <p>Experience the thrill of gaming with our collection of popular titles. From action-packed shooters to immersive RPGs, find your next favorite game here.</p>
                 <button class="btn">Explore Games</button>
             </div>
-            <img src="assets/images/joystik.svg" alt="">
+            <img src="assets/images/joystik.svg" alt="" loading="eager">
         </div>
 
         <section class="popular-games container">
@@ -48,7 +98,7 @@
             <div class="games-grid">
                 <div class="game-card">
                     <div class="game-image">
-                        <img src="assets/images/csgo.png" alt="Game 1">
+                        <img src="assets/images/csgo.png" alt="Game 1" loading="lazy">
                         <div class="game-overlay">
                             <button class="play-btn">Play Now</button>
                         </div>
@@ -63,7 +113,7 @@
                 </div>
                 <div class="game-card">
                         <div class="game-image">
-                            <img src="assets/images/dota2.png" alt="Game 2">
+                            <img src="assets/images/dota2.png" alt="Game 2" loading="lazy">
                         <div class="game-overlay">
                             <button class="play-btn">Play Now</button>
                         </div>
@@ -78,7 +128,7 @@
                 </div>
                 <div class="game-card">
                     <div class="game-image">
-                        <img src="assets/images/mine.png" alt="Game 3">
+                        <img src="assets/images/mine.png" alt="Game 3" loading="lazy">
                         <div class="game-overlay">
                             <button class="play-btn">Play Now</button>
                         </div>
@@ -120,7 +170,7 @@
                     </div>
                 </div>
                 <div class="new-game__image">
-                    <img src="assets/images/cyber1.png" alt="Cyber Adventure 2077">
+                    <img src="assets/images/cyber1.png" alt="Cyber Adventure 2077" loading="lazy">
                     <div class="new-game__overlay"></div>
                 </div>
             </div>
@@ -228,14 +278,8 @@
         <div class="particle"></div>
     </div>
 
-    <!-- Оптимизация загрузки -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="assets/css/style.css">
-    <link rel="preload" as="style" href="assets/css/stylemedia.css">
-    <link rel="preload" as="script" href="assets/js/main.js">
-
-    <script src="assets/js/main.js"></script>
+    <!-- Отложенная загрузка JavaScript -->
+    <script src="assets/js/main.js" defer></script>
 </body>
 
 </html>
