@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="accept/style.css">
+    <link rel="stylesheet" href="accept/stylemedia.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap');
+    </style>
+    <title>Game WebSite</title>
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <header class="container">
+
+            <span class="logo">Logo</span>
+            <div class="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><a href="#hero">Home</a></li>
+                    <li><a href="#about">About us</a></li>
+                    <li><a href="#popular-games">Portfolio</a></li>
+                    <li><a href="#new-game">News</a></li>
+                    <li class="btn"><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div class="hero container">
+            <div class="hero__info">
+                <h2>Gaming World</h2>
+                <h1>Discover Amazing Games and Join the Adventure</h1>
+                <p>Experience the thrill of gaming with our collection of popular titles. From action-packed shooters to immersive RPGs, find your next favorite game here.</p>
+                <button class="btn">Explore Games</button>
+            </div>
+            <img src="accept/image/joystik.svg" alt="">
+        </div>
+
+        <section class="popular-games container">
+            <h2>Popular Games</h2>
+            <div class="games-grid">
+                <div class="game-card">
+                    <div class="game-image">
+                        <img src="accept/image/csgo.png" alt="Game 1">
+                        <div class="game-overlay">
+                            <button class="play-btn">Play Now</button>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3>CS2</h3>
+                        <div class="game-stats">
+                            <span>⭐ 5</span>
+                            <span>👥 10M+</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card">
+                        <div class="game-image">
+                            <img src="accept/image/dota2.png" alt="Game 2">
+                        <div class="game-overlay">
+                            <button class="play-btn">Play Now</button>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3>Dota 2</h3>
+                        <div class="game-stats">
+                            <span>⭐ 5</span>
+                            <span>👥 15M+</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-image">
+                        <img src="accept/image/mine.png" alt="Game 3">
+                        <div class="game-overlay">
+                            <button class="play-btn">Play Now</button>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3>Minecraft</h3>
+                        <div class="game-stats">
+                            <span>⭐ 5</span>
+                            <span>👥 20M+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="new-game container">
+            <div class="new-game__content">
+                <div class="new-game__info">
+                    <span class="new-game__badge">New Release</span>
+                    <h2>Cyber Adventure 2077</h2>
+                    <p>Step into the future with our latest masterpiece. Experience an open world filled with endless possibilities, stunning graphics, and an immersive storyline that will keep you on the edge of your seat.</p>
+                    <div class="new-game__features">
+                        <div class="feature">
+                            <span class="feature-icon">🎮</span>
+                            <span>Open World</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🎯</span>
+                            <span>Action RPG</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🌟</span>
+                            <span>4K Graphics</span>
+                        </div>
+                    </div>
+                    <div class="new-game__cta">
+                        <button class="btn btn-primary">Pre-order Now</button>
+                        <button class="btn btn-secondary">Watch Trailer</button>
+                    </div>
+                </div>
+                <div class="new-game__image">
+                    <img src="accept/image/cyber1.png" alt="Cyber Adventure 2077">
+                    <div class="new-game__overlay"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Модальное окно для трейлера -->
+        <div class="modal trailer-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="video-container">
+                    <iframe width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно для предзаказа -->
+        <div class="modal preorder-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Pre-order Cyber Adventure 2077</h2>
+                <form class="preorder-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <select required>
+                            <option value="">Select Edition</option>
+                            <option value="standard">Standard Edition - $59.99</option>
+                            <option value="deluxe">Deluxe Edition - $79.99</option>
+                            <option value="ultimate">Ultimate Edition - $99.99</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Confirm Pre-order</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Секция перехода -->
+        <div class="transition-section"></div>
+
+        <!-- Footer -->
+        <footer class="footer" id="about">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>Про нас</h3>
+                        <p>Ми створюємо і розповсюджуємо захоплюючі ігри для геймерів по всьому світу. Наша місія - робити ігри, які запам'ятаються назавжди.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Контакти</h3>
+                        <ul>
+                            <li><i class="fas fa-phone"></i> +380687763512</li>
+                            <li><i class="fas fa-envelope"></i> info@gameworld.com</li>
+                            <li><i class="fas fa-map-marker-alt"></i> Прилуки, ул. Ігрова, 42</li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Соц. мережі</h3>
+                        <div class="social-links">
+                            <a href="#" class="social-link">Discord</a>
+                            <a href="#" class="social-link">Twitter</a>
+                            <a href="#" class="social-link">Instagram</a>
+                            <a href="#" class="social-link">YouTube</a>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Підписка</h3>
+                        <form class="subscribe-form">
+                            <input type="email" placeholder="Ваш email">
+                            <button type="submit" class="btn">Підписатися</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Game World. Всі права захищені.</p>
+                    <div class="footer-links">
+                        <a href="#">Політика конфіденційності</a>
+                        <a href="#">Умови використання</a>
+                        <a href="#">Кар'єра</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Декоративные элементы -->
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Оптимизация загрузки -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="accept/style.css">
+    <link rel="preload" as="style" href="accept/stylemedia.css">
+    <link rel="preload" as="script" href="accept/js/main.js">
+
+    <script src="accept/js/main.js"></script>
+</body>
+
+</html>

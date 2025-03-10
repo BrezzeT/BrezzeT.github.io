@@ -1,0 +1,218 @@
+/* Медиазапросы для мобильных устройств */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    header {
+        padding: 20px 0;
+    }
+
+    header nav {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        padding: 80px 20px 20px;
+        box-sizing: border-box;
+        z-index: 99;
+    }
+
+    header nav.active {
+        display: block;
+    }
+
+    header nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        height: auto;
+        padding: 0;
+    }
+
+    header nav ul li {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.4s forwards;
+    }
+
+    header nav ul li:nth-child(1) { animation-delay: 0.1s; }
+    header nav ul li:nth-child(2) { animation-delay: 0.2s; }
+    header nav ul li:nth-child(3) { animation-delay: 0.3s; }
+    header nav ul li:nth-child(4) { animation-delay: 0.4s; }
+    header nav ul li:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .hero__info {
+        width: 100%;
+        padding-top: 30px;
+    }
+
+    .hero img {
+        position: relative;
+        top: 0;
+        width: 80%;
+        margin: 30px auto;
+    }
+
+    .hero__info h1 {
+        font-size: 32px;
+    }
+
+    .hero__info h2 {
+        font-size: 18px;
+    }
+
+    .popular-games {
+        padding: 120px 0 40px;
+    }
+
+    .popular-games h2 {
+        font-size: 32px;
+        margin-bottom: 40px;
+    }
+
+    .popular-games h2::after {
+        width: 80px;
+        bottom: -10px;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 15px;
+    }
+
+    .game-image {
+        height: 200px;
+    }
+
+    .new-game {
+        padding: 60px 20px;
+        margin: 30px auto;
+    }
+
+    .new-game__content {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .new-game__info {
+        padding-right: 0;
+        text-align: center;
+    }
+
+    .new-game__info h2 {
+        font-size: 36px;
+    }
+
+    .new-game__features {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .new-game__cta {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+
+    .new-game__image {
+        transform: none;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .hero__info h1 {
+        font-size: 24px;
+    }
+
+    .hero__info p {
+        font-size: 14px;
+    }
+
+    .hero__info .btn {
+        padding: 12px 25px;
+        font-size: 14px;
+    }
+
+    .popular-games h2 {
+        font-size: 28px;
+    }
+
+    .popular-games h2::after {
+        width: 60px;
+    }
+
+    .game-info h3 {
+        font-size: 18px;
+    }
+
+    .game-stats {
+        font-size: 13px;
+        flex-wrap: wrap;
+    }
+
+    .game-stats span {
+        padding: 6px 12px;
+    }
+
+    .play-btn {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+
+    .new-game {
+        padding: 40px 15px;
+    }
+
+    .new-game__info h2 {
+        font-size: 28px;
+    }
+
+    .new-game__info p {
+        font-size: 16px;
+    }
+
+    .new-game__badge {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .feature {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    .btn-primary, .btn-secondary {
+        padding: 12px 25px;
+        font-size: 14px;
+    }
+}
