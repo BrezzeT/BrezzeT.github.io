@@ -485,25 +485,37 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Анимация соединительных линий между иконками игр
 function initGameIconsAnimation() {
     const canvas = document.getElementById('connectionCanvas');
-    if (!canvas) return;
+    if (!canvas) {
+        console.error('Canvas element not found');
+        return;
+    }
     
     const ctx = canvas.getContext('2d');
     const container = document.querySelector('.game-icons-animation');
     const icons = document.querySelectorAll('.game-icon');
 
+    if (!container || icons.length === 0) {
+        console.error('Required elements not found');
+        return;
+    }
+
     function resizeCanvas() {
-        canvas.width = container.offsetWidth;
-        canvas.height = container.offsetHeight;
+        const rect = container.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = `${rect.height}px`;
     }
 
     function drawConnections() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
+        const containerRect = container.getBoundingClientRect();
+        
         for (let i = 0; i < icons.length; i++) {
             for (let j = i + 1; j < icons.length; j++) {
                 const icon1 = icons[i].getBoundingClientRect();
                 const icon2 = icons[j].getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
 
                 const x1 = icon1.left + icon1.width / 2 - containerRect.left;
                 const y1 = icon1.top + icon1.height / 2 - containerRect.top;
@@ -512,8 +524,8 @@ function initGameIconsAnimation() {
 
                 const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
-                if (distance < 200) { // Максимальное расстояние для соединения
-                    const opacity = 1 - (distance / 200);
+                if (distance < 300) { // Увеличил максимальное расстояние
+                    const opacity = 1 - (distance / 300);
                     
                     // Создаем градиент для линии
                     const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
@@ -533,19 +545,31 @@ function initGameIconsAnimation() {
     }
 
     function animate() {
-        resizeCanvas();
         drawConnections();
         requestAnimationFrame(animate);
     }
 
     // Инициализация
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        drawConnections();
+    });
+
+    // Начальная настройка
     resizeCanvas();
     animate();
+
+    // Добавляем отладочную информацию
+    console.log('Animation initialized:', {
+        canvasWidth: canvas.width,
+        canvasHeight: canvas.height,
+        containerRect: container.getBoundingClientRect(),
+        iconsCount: icons.length
+    });
 }
 
-// Запускаем анимацию после загрузки страницы
-document.addEventListener('DOMContentLoaded', initGameIconsAnimation);
+// Запускаем анимацию после полной загрузки страницы
+window.addEventListener('load', initGameIconsAnimation);
 
 // Инициализация всех анимаций
 document.addEventListener('DOMContentLoaded', () => {
