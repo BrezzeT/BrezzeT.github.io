@@ -1142,7 +1142,33 @@
     </div>
 
     <!-- Отложенная загрузка JavaScript -->
-    <script src="assets/js/main.js" defer></script>
+    <script>
+        // Проверка загрузки JavaScript
+        window.addEventListener('error', function(e) {
+            if (e.target.tagName === 'SCRIPT') {
+                console.error('Ошибка загрузки скрипта:', e.target.src);
+            }
+        }, true);
+
+        // Динамическая загрузка основного скрипта
+        function loadMainScript() {
+            var script = document.createElement('script');
+            script.src = 'assets/js/main.js';
+            script.onload = function() {
+                console.log('main.js успешно загружен');
+                if (typeof initGameIconsAnimation === 'function') {
+                    initGameIconsAnimation();
+                }
+            };
+            script.onerror = function() {
+                console.error('Ошибка загрузки main.js');
+            };
+            document.body.appendChild(script);
+        }
+
+        // Загружаем скрипт после загрузки DOM
+        document.addEventListener('DOMContentLoaded', loadMainScript);
+    </script>
 </body>
 
 </html>
