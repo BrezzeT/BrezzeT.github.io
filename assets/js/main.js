@@ -485,6 +485,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Анимация соединительных линий между иконками игр
 function initGameIconsAnimation() {
     const canvas = document.getElementById('connectionCanvas');
+    if (!canvas) return;
+    
     const ctx = canvas.getContext('2d');
     const container = document.querySelector('.game-icons-animation');
     const icons = document.querySelectorAll('.game-icon');
