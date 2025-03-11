@@ -5,6 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- Предзагрузка критических ресурсов -->
+    <link rel="preload" href="assets/css/style.css" as="style">
+    <link rel="preload" href="assets/css/stylemedia.css" as="style">
+    <link rel="preload" href="assets/js/main.js" as="script">
+    <link rel="preload" href="assets/images/webp/joystik.webp" as="image" type="image/webp">
+    
+    <!-- DNS prefetch для внешних ресурсов -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    
+    <!-- Предварительное соединение -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
     <!-- Критические стили -->
     <style>
         /* Основные стили, необходимые для первого экрана */
@@ -12,6 +26,8 @@
             --primary-color: #ffe600;
             --text-color: #fff;
             --bg-gradient: linear-gradient(135deg, rgba(28,59,69,1) 0%, rgba(0,25,77,1) 50%, rgba(42,5,209,1) 100%);
+            --modal-bg: rgba(0, 0, 0, 0.8);
+            --glow-color: rgba(255, 230, 0, 0.5);
         }
         
         body {
@@ -23,38 +39,796 @@
         .wrapper {
             background: var(--bg-gradient);
             min-height: 100vh;
+            position: relative;
+            overflow: hidden;
         }
         
         .container {
-            width: 1500px;
-            max-width: 95%;
+            width: 1400px;
+            max-width: 90%;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 40px;
             box-sizing: border-box;
         }
         
         header {
-            padding: 50px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            position: relative;
+            background: linear-gradient(-45deg, #1c3b45, #00194d, #2a05d1, #1a237e);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            padding-bottom: 100px;
+            margin-bottom: -1px;
         }
         
         .hero {
+            position: relative;
+            z-index: 2;
+            margin-top: -50px;
+            padding: 120px 0 80px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 50px 0;
+            gap: 60px;
+        }
+        
+        .hero__info {
+            position: relative;
+            z-index: 3;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            max-width: 600px;
+            padding: 40px;
+            background: rgba(0, 25, 77, 0.2);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            margin-left: 40px;
+        }
+        
+        .hero__info-right {
+            position: relative;
+            flex: 1;
+            min-height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .hero__info h2 {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero__info h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        .hero__info h1 {
+            font-size: 3.5em;
+            margin: 30px 0;
+            line-height: 1.2;
+            background: linear-gradient(45deg, #fff, var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        
+        .hero__info p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            color: rgba(255,255,255,0.9);
+            padding-right: 20px;
+        }
+        
+        .hero__info .btn {
+            margin-top: 20px;
+            padding: 15px 40px;
+            font-size: 1.1em;
+        }
+        
+        .hero picture {
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+            animation: floatImage 6s ease-in-out infinite;
+            margin-right: 40px;
+        }
+        
+        @keyframes floatImage {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Стили для модальных окон */
+        .modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--modal-bg);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            position: relative;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            margin: auto;
+            color: #333;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            will-change: transform, opacity;
+        }
+        
+        .modal.active .modal-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .close-modal {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            z-index: 1001;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .close-modal:hover {
+            background: #f0f0f0;
+            transform: scale(1.1);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            background: #000;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Стили для формы предзаказа */
+        .preorder-form {
+            margin-top: 20px;
+        }
+        
+        .preorder-form .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .preorder-form input,
+        .preorder-form select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            background: #f8f8f8;
+        }
+        
+        .preorder-form input:focus,
+        .preorder-form select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255,230,0,0.2);
+        }
+        
+        .preorder-form button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 5px;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .preorder-form button:hover {
+            background: #ffd700;
+            transform: translateY(-2px);
+        }
+        
+        .preorder-form button:active {
+            transform: translateY(0);
+        }
+
+        /* Анимированный градиент для хедера */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Декоративные геометрические фигуры */
+        .geometric-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: floatAnimation 8s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            top: 20%;
+            left: 10%;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            top: 40%;
+            right: 15%;
+            width: 70px;
+            height: 70px;
+            background: var(--primary-color);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            animation-delay: -2s;
+        }
+
+        .shape-3 {
+            bottom: 30%;
+            left: 20%;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            animation-delay: -4s;
+        }
+
+        @keyframes floatAnimation {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Светящиеся точки */
+        .glow-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: glowAnimation 3s ease-in-out infinite;
+        }
+
+        @keyframes glowAnimation {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+        }
+
+        /* Эффект свечения для кнопок */
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
+        }
+
+        /* Улучшенная анимация для навигации */
+        nav ul li a {
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav ul li a::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-color);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        nav ul li a:hover::before {
+            transform: translateX(0);
+        }
+
+        header.container {
+            padding: 30px 40px;
+            margin: 20px auto;
+            border-radius: 20px;
+            background: linear-gradient(-45deg, rgba(28,59,69,0.95), rgba(0,25,77,0.95), rgba(42,5,209,0.95));
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Стили для лого */
+        .logo {
+            font-size: 2em;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(255, 230, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Улучшенные стили для навигации */
+        nav {
+            position: relative;
+            z-index: 2;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        nav ul li.active a {
+            color: var(--primary-color);
+        }
+
+        /* Улучшенные стили для кнопок */
+        .btn {
+            background: var(--primary-color);
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(255, 230, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 230, 0, 0.3);
+        }
+
+        /* Анимация для геометрических фигур при наведении */
+        .geometric-shapes .shape {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        header:hover .geometric-shapes .shape {
+            opacity: 0.2;
+            transform: scale(1.1);
+        }
+
+        /* Дополнительная анимация для точек */
+        .glow-dots .dot {
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        @keyframes pulseAnimation {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0.7; box-shadow: 0 0 20px var(--primary-color); }
+        }
+
+        .glow-dots .dot {
+            animation: pulseAnimation 3s ease-in-out infinite;
+        }
+
+        /* Стили для мобильного меню */
+        .menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .menu-btn span {
+            width: 30px;
+            height: 3px;
+            background: var(--primary-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px rgba(255, 230, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .menu-btn {
+                display: flex;
+            }
+
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: rgba(0, 25, 77, 0.95);
+                backdrop-filter: blur(10px);
+                transition: right 0.3s ease;
+            }
+
+            nav.active {
+                right: 0;
+            }
+
+            nav ul {
+                flex-direction: column;
+                padding: 80px 40px;
+                gap: 2rem;
+            }
+        }
+
+        /* Добавляем волнистый переход */
+        .wave-transition {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to bottom, transparent, rgba(0,25,77,0.3));
+            z-index: 1;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2300194d' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+            background-size: 1440px 100px;
+            animation: waveAnimation 20s linear infinite;
+        }
+
+        .wave:nth-child(2) {
+            bottom: 10px;
+            opacity: 0.5;
+            animation: waveAnimation 15s linear infinite reverse;
+        }
+
+        .wave:nth-child(3) {
+            bottom: 20px;
+            opacity: 0.2;
+            animation: waveAnimation 10s linear infinite;
+        }
+
+        @keyframes waveAnimation {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1440px; }
+        }
+
+        /* Добавляем градиентный оверлей */
+        .gradient-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to bottom, 
+                rgba(0,25,77,0.8) 0%, 
+                rgba(28,59,69,0.4) 50%, 
+                transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Обновленные стили для секций */
+        section {
+            padding: 100px 0;
+            margin: 40px 0;
+        }
+
+        /* Обновленные стили для сетки игр */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .game-card {
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        /* Обновленные стили для new-game секции */
+        .new-game__content {
+            display: flex;
+            gap: 60px;
+            align-items: center;
+            padding: 40px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+        }
+
+        .new-game__features {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .feature {
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Обновленные стили для футера */
+        .footer {
+            margin-top: 100px;
+            padding: 80px 0 40px;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3));
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            padding: 40px 0;
+        }
+
+        .footer-section {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-bottom {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Медиа-запросы для адаптивности */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 30px;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 100px 20px 60px;
+            }
+
+            .hero__info {
+                margin: 0 auto;
+                padding: 30px;
+            }
+
+            .hero__info-right {
+                min-height: 400px;
+                width: 100%;
+            }
+
+            .hero__info h2::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .hero__info p {
+                padding-right: 0;
+            }
+
+            .hero picture {
+                margin: 40px auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            section {
+                padding: 60px 0;
+                margin: 20px 0;
+            }
+
+            .new-game__content {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .footer-content {
+                gap: 30px;
+            }
+
+            .hero__info {
+                padding: 20px;
+                margin: 0 20px;
+            }
+
+            .hero__info h1 {
+                font-size: 2.5em;
+            }
+        }
+
+        /* Стили для анимации иконок игр */
+        .game-icons-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .game-icon {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 230, 0, 0.1);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: floatIcon 10s ease-in-out infinite;
+            animation-delay: var(--delay);
+            border: 2px solid rgba(255, 230, 0, 0.2);
+            box-shadow: 0 0 20px rgba(255, 230, 0, 0.1);
+        }
+
+        .game-icon svg {
+            width: 32px;
+            height: 32px;
+            color: var(--primary-color);
+            filter: drop-shadow(0 0 5px rgba(255, 230, 0, 0.5));
+            transition: transform 0.3s ease;
+        }
+
+        /* Обновленное позиционирование иконок */
+        .game-icon:nth-child(1) { top: 10%; left: 10%; }
+        .game-icon:nth-child(2) { top: 20%; right: 20%; }
+        .game-icon:nth-child(3) { top: 35%; left: 25%; }
+        .game-icon:nth-child(4) { top: 45%; right: 15%; }
+        .game-icon:nth-child(5) { top: 60%; left: 20%; }
+        .game-icon:nth-child(6) { top: 15%; left: 45%; }
+        .game-icon:nth-child(7) { top: 40%; left: 60%; }
+        .game-icon:nth-child(8) { top: 25%; right: 30%; }
+        .game-icon:nth-child(9) { top: 55%; right: 25%; }
+        .game-icon:nth-child(10) { top: 30%; left: 35%; }
+
+        @keyframes floatIcon {
+            0%, 100% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                box-shadow: 0 0 20px rgba(255, 230, 0, 0.2);
+            }
+            25% {
+                transform: translate(30px, -30px) scale(1.1) rotate(5deg);
+                box-shadow: 0 0 30px rgba(255, 230, 0, 0.3);
+            }
+            50% {
+                transform: translate(-30px, 30px) scale(0.9) rotate(-5deg);
+                box-shadow: 0 0 15px rgba(255, 230, 0, 0.1);
+            }
+            75% {
+                transform: translate(-20px, -20px) scale(1.05) rotate(3deg);
+                box-shadow: 0 0 25px rgba(255, 230, 0, 0.25);
+            }
         }
     </style>
     
-    <!-- Остальные стили -->
+    <!-- Остальные стили с асинхронной загрузкой -->
     <link rel="stylesheet" href="assets/css/style.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/css/stylemedia.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="assets/css/stylemedia.css">
+    </noscript>
     
     <!-- Предзагрузка шрифтов -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap">
@@ -64,8 +838,20 @@
 
 <body>
     <div class="wrapper">
-
         <header class="container">
+            <!-- Декоративные элементы -->
+            <div class="geometric-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+            <div class="glow-dots">
+                <div class="dot" style="top: 20%; left: 30%;"></div>
+                <div class="dot" style="top: 50%; right: 20%;"></div>
+                <div class="dot" style="bottom: 30%; left: 50%;"></div>
+                <div class="dot" style="top: 70%; right: 40%;"></div>
+                <div class="dot" style="top: 40%; left: 60%;"></div>
+            </div>
 
             <span class="logo">Logo</span>
             <div class="menu-btn">
@@ -82,13 +868,59 @@
                     <li class="btn"><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
+
+            <!-- Добавляем волнистый переход -->
+            <div class="wave-transition">
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </div>
         </header>
+        
+        <!-- Добавляем градиентный оверлей -->
+        <div class="gradient-overlay"></div>
+        
         <div class="hero container">
             <div class="hero__info">
                 <h2>Gaming World</h2>
                 <h1>Discover Amazing Games and Join the Adventure</h1>
                 <p>Experience the thrill of gaming with our collection of popular titles. From action-packed shooters to immersive RPGs, find your next favorite game here.</p>
                 <button class="btn">Explore Games</button>
+            </div>
+            <div class="hero__info-right">
+                <div class="game-icons-animation">
+                    <div class="game-icon" style="--delay: 0s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M21,6H3A2,2 0 0,0 1,8V16A2,2 0 0,0 3,18H21A2,2 0 0,0 23,16V8A2,2 0 0,0 21,6M21,16H3V8H21M6,15H8V13H10V11H8V9H6V11H4V13H6M14.5,12A1.5,1.5 0 0,1 16,13.5A1.5,1.5 0 0,1 14.5,15A1.5,1.5 0 0,1 13,13.5A1.5,1.5 0 0,1 14.5,12M18.5,9A1.5,1.5 0 0,1 20,10.5A1.5,1.5 0 0,1 18.5,12A1.5,1.5 0 0,1 17,10.5A1.5,1.5 0 0,1 18.5,9Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 1s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8.39C13.57,9.4 15.42,10 17.42,10C18.2,10 18.95,9.91 19.67,9.74C19.88,10.45 20,11.21 20,12C20,16.41 16.41,20 12,20C9,20 6.39,18.34 5,15.89L6.75,14V13A1.25,1.25 0 0,1 8,11.75A1.25,1.25 0 0,1 9.25,13V14H12M16,11.75A1.25,1.25 0 0,0 14.75,13A1.25,1.25 0 0,0 16,14.25A1.25,1.25 0 0,0 17.25,13A1.25,1.25 0 0,0 16,11.75Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 2s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6,7H18A5,5 0 0,1 23,12A5,5 0 0,1 18,17C16.36,17 14.91,16.21 14,15H10C9.09,16.21 7.64,17 6,17A5,5 0 0,1 1,12A5,5 0 0,1 6,7M19.75,9.5A1.25,1.25 0 0,0 18.5,10.75A1.25,1.25 0 0,0 19.75,12A1.25,1.25 0 0,0 21,10.75A1.25,1.25 0 0,0 19.75,9.5M17.25,12A1.25,1.25 0 0,0 16,13.25A1.25,1.25 0 0,0 17.25,14.5A1.25,1.25 0 0,0 18.5,13.25A1.25,1.25 0 0,0 17.25,12M5,9V11H3V13H5V15H7V13H9V11H7V9H5Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 3s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.97,16L5,19C4.67,19.3 4.23,19.5 3.75,19.5A1.75,1.75 0 0,1 2,17.75V17.5L3,10.12C3.21,7.81 5.14,6 7.5,6H16.5C18.86,6 20.79,7.81 21,10.12L22,17.5V17.75A1.75,1.75 0 0,1 20.25,19.5C19.77,19.5 19.33,19.3 19,19L16.03,16H7.97M7,8V10H5V11H7V13H8V11H10V10H8V8H7M16.5,8A0.75,0.75 0 0,0 15.75,8.75A0.75,0.75 0 0,0 16.5,9.5A0.75,0.75 0 0,0 17.25,8.75A0.75,0.75 0 0,0 16.5,8M14.75,9.75A0.75,0.75 0 0,0 14,10.5A0.75,0.75 0 0,0 14.75,11.25A0.75,0.75 0 0,0 15.5,10.5A0.75,0.75 0 0,0 14.75,9.75M18.25,9.75A0.75,0.75 0 0,0 17.5,10.5A0.75,0.75 0 0,0 18.25,11.25A0.75,0.75 0 0,0 19,10.5A0.75,0.75 0 0,0 18.25,9.75M16.5,11.5A0.75,0.75 0 0,0 15.75,12.25A0.75,0.75 0 0,0 16.5,13A0.75,0.75 0 0,0 17.25,12.25A0.75,0.75 0 0,0 16.5,11.5Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 4s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M21,11C21,16.55 17.16,21.74 12,23C6.84,21.74 3,16.55 3,11V5L12,1L21,5V11M12,21C15.75,20 19,15.54 19,11.22V6.3L12,3.18L5,6.3V11.22C5,15.54 8.25,20 12,21M15.05,16L11.97,14.15L8.9,16L9.71,12.5L7,10.16L10.58,9.85L11.97,6.55L13.37,9.85L16.95,10.16L14.23,12.5L15.05,16"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 5s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12,0C8.96,0 6.21,1.23 4.22,3.22L5.63,4.63C7.26,3 9.5,2 12,2C14.5,2 16.74,3 18.36,4.64L19.77,3.23C17.79,1.23 15.04,0 12,0M7.05,6.05L8.46,7.46C9.37,6.56 10.62,6 12,6C13.38,6 14.63,6.56 15.54,7.46L16.95,6.05C15.68,4.78 13.93,4 12,4C10.07,4 8.32,4.78 7.05,6.05M12,15A2,2 0 0,1 10,13A2,2 0 0,1 12,11A2,2 0 0,1 14,13A2,2 0 0,1 12,15M15,9H9A1,1 0 0,0 8,10V22A1,1 0 0,0 9,23H15A1,1 0 0,0 16,22V10A1,1 0 0,0 15,9Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 6s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H16L12,22L8,18H4A2,2 0 0,1 2,16V4A2,2 0 0,1 4,2M4,4V16H8.83L12,19.17L15.17,16H20V4H4M6,7H18V9H6V7M6,11H16V13H6V11Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 7s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M16.5,9A4.5,4.5 0 0,0 12,13.5A4.5,4.5 0 0,0 16.5,18A4.5,4.5 0 0,0 21,13.5A4.5,4.5 0 0,0 16.5,9M16.5,16.5A3,3 0 0,1 13.5,13.5A3,3 0 0,1 16.5,10.5A3,3 0 0,1 19.5,13.5A3,3 0 0,1 16.5,16.5M7.5,9A4.5,4.5 0 0,0 3,13.5A4.5,4.5 0 0,0 7.5,18A4.5,4.5 0 0,0 12,13.5A4.5,4.5 0 0,0 7.5,9M7.5,16.5A3,3 0 0,1 4.5,13.5A3,3 0 0,1 7.5,10.5A3,3 0 0,1 10.5,13.5A3,3 0 0,1 7.5,16.5M3,4V7H6V4H3M21,4V7H18V4H21Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 8s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7,6H17A6,6 0 0,1 23,12A6,6 0 0,1 17,18C15.22,18 13.63,17.23 12.53,16H11.47C10.37,17.23 8.78,18 7,18A6,6 0 0,1 1,12A6,6 0 0,1 7,6M6,9V11H4V13H6V15H8V13H10V11H8V9H6M15.5,12A1.5,1.5 0 0,0 14,13.5A1.5,1.5 0 0,0 15.5,15A1.5,1.5 0 0,0 17,13.5A1.5,1.5 0 0,0 15.5,12M18.5,9A1.5,1.5 0 0,0 17,10.5A1.5,1.5 0 0,0 18.5,12A1.5,1.5 0 0,0 20,10.5A1.5,1.5 0 0,0 18.5,9Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 9s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/></svg>
+                    </div>
+                    <canvas id="connectionCanvas"></canvas>
+                </div>
             </div>
             <picture>
                 <source srcset="assets/images/webp/joystik.webp" type="image/webp">
@@ -106,7 +938,7 @@
                             <img src="assets/images/csgo.png" alt="Game 1" loading="lazy" width="350" height="200">
                         </picture>
                         <div class="game-overlay">
-                            <button class="play-btn">Play Now</button>
+                            <a href="https://store.steampowered.com/app/730/CounterStrike_2/" target="_blank" class="play-btn">Play Now</a>
                         </div>
                     </div>
                     <div class="game-info">
@@ -124,7 +956,7 @@
                             <img src="assets/images/dota2.png" alt="Game 2" loading="lazy" width="350" height="200">
                         </picture>
                         <div class="game-overlay">
-                            <button class="play-btn">Play Now</button>
+                            <a href="https://store.steampowered.com/app/570/Dota_2/" target="_blank" class="play-btn">Play Now</a>
                         </div>
                     </div>
                     <div class="game-info">
@@ -142,7 +974,7 @@
                             <img src="assets/images/mine.png" alt="Game 3" loading="lazy" width="350" height="200">
                         </picture>
                         <div class="game-overlay">
-                            <button class="play-btn">Play Now</button>
+                            <a href="https://www.minecraft.net/ru-ru/get-minecraft" target="_blank" class="play-btn">Play Now</a>
                         </div>
                     </div>
                     <div class="game-info">
@@ -177,8 +1009,8 @@
                         </div>
                     </div>
                     <div class="new-game__cta">
-                        <button class="btn btn-primary">Pre-order Now</button>
-                        <button class="btn btn-secondary">Watch Trailer</button>
+                        <button class="btn btn-primary" data-modal="preorder">Pre-order Now</button>
+                        <button class="btn btn-secondary" data-modal="trailer">Watch Trailer</button>
                     </div>
                 </div>
                 <div class="new-game__image">
@@ -192,21 +1024,24 @@
         </section>
 
         <!-- Модальное окно для трейлера -->
-        <div class="modal trailer-modal">
+        <div class="modal trailer-modal" id="trailer-modal">
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
                 <div class="video-container">
-                    <iframe width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                            title="Cyber Adventure 2077 Trailer" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
                 </div>
             </div>
         </div>
 
         <!-- Модальное окно для предзаказа -->
-        <div class="modal preorder-modal">
+        <div class="modal preorder-modal" id="preorder-modal">
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
                 <h2>Pre-order Cyber Adventure 2077</h2>
-                <form class="preorder-form">
+                <form class="preorder-form" id="preorder-form">
                     <div class="form-group">
                         <input type="text" placeholder="Your Name" required>
                     </div>

@@ -149,84 +149,151 @@ const handleScroll = () => {
 window.addEventListener('scroll', handleScroll);
 handleScroll(); // Проверяем видимость при загрузке страницы
 
-// Функционал для кнопок трейлера и предзаказа
-document.addEventListener('DOMContentLoaded', function() {
-    const trailerBtn = document.querySelector('.btn-secondary');
-    const preorderBtn = document.querySelector('.btn-primary');
-    const trailerModal = document.querySelector('.trailer-modal');
-    const preorderModal = document.querySelector('.preorder-modal');
-    const closeButtons = document.querySelectorAll('.close-modal');
-    const videoContainer = document.querySelector('.video-container iframe');
-    const modals = document.querySelectorAll('.modal');
+// Функционал модальных окон
+document.addEventListener('DOMContentLoaded', () => {
+    const modals = {
+        trailer: document.getElementById('trailer-modal'),
+        preorder: document.getElementById('preorder-modal')
+    };
+    
+    const buttons = {
+        trailer: document.querySelector('[data-modal="trailer"]'),
+        preorder: document.querySelector('[data-modal="preorder"]')
+    };
 
-    // URL трейлера
-    const trailerUrl = "https://www.youtube.com/embed/aSrFWinrkeQ?autoplay=1&rel=0&showinfo=0&modestbranding=1";
+    // URL трейлера (замените на реальный URL вашего трейлера)
+    const trailerUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
 
-    function openModal(modal) {
+    function openModal(modalId) {
+        const modal = modals[modalId];
         if (!modal) return;
-        document.body.style.overflow = 'hidden';
-        modal.style.display = 'flex';
+
+        // Получаем текущую позицию скролла
+        const scrollY = window.scrollY;
+        const viewportHeight = window.innerHeight;
+        
+        // Блокируем скролл и компенсируем сдвиг
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = '100%';
+        
+        // Устанавливаем модальное окно по центру текущего viewport
+        modal.style.top = `${scrollY}px`;
+        modal.style.height = `${viewportHeight}px`;
+        
+        // Показываем модальное окно
         requestAnimationFrame(() => {
             modal.classList.add('active');
+            
+            // Если это трейлер, загружаем видео
+            if (modalId === 'trailer') {
+                const iframe = modal.querySelector('iframe');
+                if (iframe) {
+                    iframe.src = trailerUrl;
+                }
+            }
         });
     }
 
     function closeModal(modal) {
         if (!modal) return;
-        document.body.style.overflow = '';
+        
+        // Получаем сохраненную позицию скролла
+        const scrollY = Math.abs(parseInt(document.body.style.top || '0'));
+        
+        // Убираем активный класс
         modal.classList.remove('active');
-        setTimeout(() => {
-            modal.style.display = 'none';
-            if (modal.classList.contains('trailer-modal')) {
-                const iframe = modal.querySelector('iframe');
-                if (iframe) iframe.src = '';
+        
+        // Восстанавливаем состояние страницы
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        window.scrollTo(0, scrollY);
+        
+        // Очищаем стили модального окна
+        modal.style.top = '';
+        modal.style.height = '';
+        
+        // Если это трейлер, очищаем src у iframe после закрытия
+        if (modal.classList.contains('trailer-modal')) {
+            const iframe = modal.querySelector('iframe');
+            if (iframe) {
+                setTimeout(() => {
+                    iframe.src = '';
+                }, 300);
             }
-        }, 300);
+        }
     }
 
-    trailerBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const iframe = trailerModal?.querySelector('iframe');
-        if (iframe) iframe.src = trailerUrl;
-        openModal(trailerModal);
-    });
+    // Функция для получения ширины скроллбара
+    function getScrollbarWidth() {
+        return window.innerWidth - document.documentElement.clientWidth;
+    }
 
-    preorderBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        openModal(preorderModal);
-    });
-
-    closeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const modal = button.closest('.modal');
-            closeModal(modal);
-        });
-    });
-
-    modals.forEach(modal => {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal(modal);
-            }
-        });
-
-        const content = modal.querySelector('.modal-content');
-        if (content) {
-            content.addEventListener('click', (e) => {
-                e.stopPropagation();
+    // Обработчики для кнопок
+    Object.keys(buttons).forEach(key => {
+        const button = buttons[key];
+        if (button) {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal(key);
             });
         }
     });
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            modals.forEach(modal => {
-                if (modal.classList.contains('active')) {
+    // Закрытие по клику на крестик
+    document.querySelectorAll('.close-modal').forEach(closeBtn => {
+        closeBtn.addEventListener('click', () => {
+            const modal = closeBtn.closest('.modal');
+            closeModal(modal);
+        });
+    });
+
+    // Закрытие по клику вне модального окна
+    Object.values(modals).forEach(modal => {
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
                     closeModal(modal);
                 }
             });
         }
     });
+
+    // Закрытие по Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            Object.values(modals).forEach(modal => {
+                if (modal && modal.classList.contains('active')) {
+                    closeModal(modal);
+                }
+            });
+        }
+    });
+
+    // Обработка формы предзаказа
+    const preorderForm = document.getElementById('preorder-form');
+    if (preorderForm) {
+        preorderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(preorderForm);
+            
+            // Здесь можно добавить валидацию формы
+            let isValid = true;
+            formData.forEach((value, key) => {
+                if (!value) isValid = false;
+            });
+
+            if (isValid) {
+                // Здесь можно добавить отправку данных на сервер
+                alert('Спасибо за предзаказ! Мы свяжемся с вами в ближайшее время.');
+                preorderForm.reset();
+                closeModal(modals.preorder);
+            } else {
+                alert('Пожалуйста, заполните все поля формы.');
+            }
+        });
+    }
 });
 
 // Оптимизация производительности
@@ -377,4 +444,109 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+});
+
+// Ленивая загрузка изображений
+document.addEventListener('DOMContentLoaded', () => {
+    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+    
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+
+        lazyImages.forEach(img => imageObserver.observe(img));
+    }
+});
+
+// Плавная прокрутка для навигации
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Анимация соединительных линий между иконками игр
+function initGameIconsAnimation() {
+    const canvas = document.getElementById('connectionCanvas');
+    const ctx = canvas.getContext('2d');
+    const container = document.querySelector('.game-icons-animation');
+    const icons = document.querySelectorAll('.game-icon');
+
+    function resizeCanvas() {
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
+    }
+
+    function drawConnections() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        for (let i = 0; i < icons.length; i++) {
+            for (let j = i + 1; j < icons.length; j++) {
+                const icon1 = icons[i].getBoundingClientRect();
+                const icon2 = icons[j].getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+
+                const x1 = icon1.left + icon1.width / 2 - containerRect.left;
+                const y1 = icon1.top + icon1.height / 2 - containerRect.top;
+                const x2 = icon2.left + icon2.width / 2 - containerRect.left;
+                const y2 = icon2.top + icon2.height / 2 - containerRect.top;
+
+                const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+                if (distance < 200) { // Максимальное расстояние для соединения
+                    const opacity = 1 - (distance / 200);
+                    
+                    // Создаем градиент для линии
+                    const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+                    gradient.addColorStop(0, `rgba(255, 230, 0, ${opacity * 0.5})`);
+                    gradient.addColorStop(0.5, `rgba(255, 230, 0, ${opacity * 0.8})`);
+                    gradient.addColorStop(1, `rgba(255, 230, 0, ${opacity * 0.5})`);
+
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function animate() {
+        resizeCanvas();
+        drawConnections();
+        requestAnimationFrame(animate);
+    }
+
+    // Инициализация
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    animate();
+}
+
+// Запускаем анимацию после загрузки страницы
+document.addEventListener('DOMContentLoaded', initGameIconsAnimation);
+
+// Инициализация всех анимаций
+document.addEventListener('DOMContentLoaded', () => {
+    initGameIconsAnimation();
+    // ... existing initialization code ...
 }); 
