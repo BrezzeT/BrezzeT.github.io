@@ -867,31 +867,15 @@ header nav ul li.btn a:hover {
 }
 
 .particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: var(--primary-color);
-  border-radius: 50%;
+  position: fixed;
   pointer-events: none;
-  animation: floatParticle 20s linear infinite;
-  contain: strict;
+  will-change: transform;
+  animation: float 20s ease-in-out infinite;
 }
 
-@keyframes floatParticle {
-  0% {
-    transform: translate(calc(random() * 100vw), -10px) rotate(0deg);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.5;
-  }
-  80% {
-    opacity: 0.5;
-  }
-  100% {
-    transform: translate(calc(random() * 100vw), 110vh) rotate(360deg);
-    opacity: 0;
-  }
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(20px, -20px); }
 }
 
 /* Распределяем частицы по экрану */
