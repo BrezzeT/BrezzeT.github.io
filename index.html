@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Добавляем мета-тег для управления куки -->
+    <meta http-equiv="Content-Security-Policy" content="block-all-mixed-content">
     
     <!-- Предзагрузка критических ресурсов -->
     <link rel="preload" href="assets/css/style.css" as="style">
     <link rel="preload" href="assets/css/stylemedia.css" as="style">
     <link rel="preload" href="assets/js/main.js" as="script">
-    <link rel="preload" href="assets/images/webp/joystik.webp" as="image" type="image/webp">
     
     <!-- DNS prefetch для внешних ресурсов -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
@@ -152,49 +153,42 @@
         
         /* Стили для модальных окон */
         .modal {
-            display: flex;
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background: var(--modal-bg);
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 99999;
+            display: none;
             align-items: center;
+            justify-content: center;
             padding: 20px;
             box-sizing: border-box;
+            top: 0;
+            left: 0;
         }
         
         .modal.active {
-            opacity: 1;
-            visibility: visible;
+            display: flex;
         }
         
         .modal-content {
             position: relative;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 600px;
-            width: 90%;
-            margin: auto;
-            color: #333;
+            background: rgba(28, 59, 69, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            color: #fff;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0.8);
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            will-change: transform, opacity;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
         
         .modal.active .modal-content {
+            transform: scale(1);
             opacity: 1;
-            transform: translateY(0);
         }
         
         .close-modal {
@@ -426,7 +420,7 @@
             justify-content: space-between;
             align-items: center;
             position: relative;
-            z-index: 2;
+            z-index: 1000;
         }
 
         /* Стили для лого */
@@ -436,13 +430,13 @@
             color: var(--primary-color);
             text-shadow: 0 0 10px rgba(255, 230, 0, 0.3);
             position: relative;
-            z-index: 2;
+            z-index: 1000;
         }
 
         /* Улучшенные стили для навигации */
         nav {
             position: relative;
-            z-index: 2;
+            z-index: 1000;
         }
 
         nav ul {
@@ -913,7 +907,7 @@
                         <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6,7H18A5,5 0 0,1 23,12A5,5 0 0,1 18,17C16.36,17 14.91,16.21 14,15H10C9.09,16.21 7.64,17 6,17A5,5 0 0,1 1,12A5,5 0 0,1 6,7M19.75,9.5A1.25,1.25 0 0,0 18.5,10.75A1.25,1.25 0 0,0 19.75,12A1.25,1.25 0 0,0 21,10.75A1.25,1.25 0 0,0 19.75,9.5M17.25,12A1.25,1.25 0 0,0 16,13.25A1.25,1.25 0 0,0 17.25,14.5A1.25,1.25 0 0,0 18.5,13.25A1.25,1.25 0 0,0 17.25,12M5,9V11H3V13H5V15H7V13H9V11H7V9H5Z"/></svg>
                     </div>
                     <div class="game-icon" style="--delay: 3s">
-                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.97,16L5,19C4.67,19.3 4.23,19.5 3.75,19.5A1.75,1.75 0 0,1 2,17.75V17.5L3,10.12C3.21,7.81 5.14,6 7.5,6H16.5C18.86,6 20.79,7.81 21,10.12L22,17.5V17.75A1.75,1.75 0 0,1 20.25,19.5C19.77,19.5 19.33,19.3 19,19L16.03,16H7.97M7,8V10H5V11H7V13H8V11H10V10H8V8H7M16.5,8A0.75,0.75 0 0,0 15.75,8.75A0.75,0.75 0 0,0 16.5,9.5A0.75,0.75 0 0,0 17.25,8.75A0.75,0.75 0 0,0 16.5,8M14.75,9.75A0.75,0.75 0 0,0 14,10.5A0.75,0.75 0 0,0 14.75,11.25A0.75,0.75 0 0,0 15.5,10.5A0.75,0.75 0 0,0 14.75,9.75M18.25,9.75A0.75,0.75 0 0,0 17.5,10.5A0.75,0.75 0 0,0 18.25,11.25A0.75,0.75 0 0,0 19,10.5A0.75,0.75 0 0,0 18.25,9.75M16.5,11.5A0.75,0.75 0 0,0 15.75,12.25A0.75,0.75 0 0,0 16.5,13A0.75,0.75 0 0,0 17.25,12.25A0.75,0.75 0 0,0 16.5,11.5Z"/></svg>
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.97,16L5,19C4.67,19.3 4.23,19.5 3.75,19.5A1.75,1.75 0 0,1 2,17.75V17.5L3,10.12C3.21,7.81 5.14,6 7.5,6H16.5C18.86,6 20.79,7.81 21,10.12L22,17.5V17.75A1.75,1.75 0 0,1 20.25,19.5C19.77,19.5 19.33,19.3 19,19L16.03,16H7.97M7,8V10H5V11H7V13H8V11H10V10H8V9H7M16.5,8A0.75,0.75 0 0,0 15.75,8.75A0.75,0.75 0 0,0 16.5,9.5A0.75,0.75 0 0,0 17.25,8.75A0.75,0.75 0 0,0 16.5,8M14.75,9.75A0.75,0.75 0 0,0 14,10.5A0.75,0.75 0 0,0 14.75,11.25A0.75,0.75 0 0,0 15.5,10.5A0.75,0.75 0 0,0 14.75,9.75M18.25,9.75A0.75,0.75 0 0,0 17.5,10.5A0.75,0.75 0 0,0 18.25,11.25A0.75,0.75 0 0,0 19,10.5A0.75,0.75 0 0,0 18.25,9.75M16.5,11.5A0.75,0.75 0 0,0 15.75,12.25A0.75,0.75 0 0,0 16.5,13A0.75,0.75 0 0,0 17.25,12.25A0.75,0.75 0 0,0 16.5,11.5Z"/></svg>
                     </div>
                     <div class="game-icon" style="--delay: 4s">
                         <svg viewBox="0 0 24 24"><path fill="currentColor" d="M21,11C21,16.55 17.16,21.74 12,23C6.84,21.74 3,16.55 3,11V5L12,1L21,5V11M12,21C15.75,20 19,15.54 19,11.22V6.3L12,3.18L5,6.3V11.22C5,15.54 8.25,20 12,21M15.05,16L11.97,14.15L8.9,16L9.71,12.5L7,10.16L10.58,9.85L11.97,6.55L13.37,9.85L16.95,10.16L14.23,12.5L15.05,16"/></svg>
@@ -935,10 +929,6 @@
                     </div>
                 </div>
             </div>
-            <picture>
-                <source srcset="assets/images/webp/joystik.webp" type="image/webp">
-                <img src="assets/images/joystik.svg" alt="" loading="eager" width="500" height="500">
-            </picture>
         </div>
 
         <section class="popular-games container">
@@ -1041,9 +1031,11 @@
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
                 <div class="video-container">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    <iframe width="560" height="315" 
+                            src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
                             title="Cyber Adventure 2077 Trailer" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            frameborder="0"
+                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                             allowfullscreen></iframe>
                 </div>
             </div>
@@ -1137,37 +1129,117 @@
         <div class="particle"></div>
         <div class="particle"></div>
         <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
     </div>
 
-    <!-- Отложенная загрузка JavaScript -->
+    <!-- Обновляем скрипт для работы без сторонних куки -->
     <script>
-        // Проверка загрузки JavaScript
-        window.addEventListener('error', function(e) {
-            if (e.target.tagName === 'SCRIPT') {
-                console.error('Ошибка загрузки скрипта:', e.target.src);
-            }
-        }, true);
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Инициализация модальных окон');
+            
+            const modals = {
+                trailer: document.getElementById('trailer-modal'),
+                preorder: document.getElementById('preorder-modal')
+            };
+            
+            const buttons = {
+                trailer: document.querySelector('[data-modal="trailer"]'),
+                preorder: document.querySelector('[data-modal="preorder"]')
+            };
 
-        // Динамическая загрузка основного скрипта
-        function loadMainScript() {
-            var script = document.createElement('script');
-            script.src = 'assets/js/main.js';
-            script.onload = function() {
-                console.log('main.js успешно загружен');
-                if (typeof initGameIconsAnimation === 'function') {
-                    initGameIconsAnimation();
+            function openModal(modalId) {
+                const modal = modals[modalId];
+                if (!modal) {
+                    console.error('Модальное окно не найдено:', modalId);
+                    return;
                 }
-            };
-            script.onerror = function() {
-                console.error('Ошибка загрузки main.js');
-            };
-            document.body.appendChild(script);
-        }
+                
+                document.body.style.overflow = 'hidden';
+                modal.style.display = 'flex';
+                
+                requestAnimationFrame(() => {
+                    modal.classList.add('active');
+                    
+                    if (modalId === 'trailer') {
+                        const iframe = modal.querySelector('iframe');
+                        if (iframe) {
+                            iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&modestbranding=1";
+                        }
+                    }
+                });
+            }
 
-        // Загружаем скрипт после загрузки DOM
-        document.addEventListener('DOMContentLoaded', loadMainScript);
+            function closeModal(modal) {
+                if (!modal) return;
+                
+                document.body.style.overflow = '';
+                modal.classList.remove('active');
+                
+                if (modal.classList.contains('trailer-modal')) {
+                    const iframe = modal.querySelector('iframe');
+                    if (iframe) {
+                        iframe.src = '';
+                    }
+                }
+                
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            }
+
+            // Обработчики для кнопок
+            if (buttons.trailer) {
+                buttons.trailer.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Клик по кнопке трейлера');
+                    openModal('trailer');
+                });
+            }
+
+            if (buttons.preorder) {
+                buttons.preorder.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Клик по кнопке предзаказа');
+                    openModal('preorder');
+                });
+            }
+
+            // Закрытие по крестику
+            document.querySelectorAll('.close-modal').forEach(closeBtn => {
+                closeBtn.addEventListener('click', () => {
+                    const modal = closeBtn.closest('.modal');
+                    closeModal(modal);
+                });
+            });
+
+            // Закрытие по клику вне окна
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+            });
+
+            // Закрытие по Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal.active').forEach(modal => {
+                        closeModal(modal);
+                    });
+                }
+            });
+
+            // Обработка формы предзаказа
+            const preorderForm = document.getElementById('preorder-form');
+            if (preorderForm) {
+                preorderForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    alert('Спасибо за предзаказ! Мы свяжемся с вами в ближайшее время.');
+                    preorderForm.reset();
+                    closeModal(modals.preorder);
+                });
+            }
+        });
     </script>
 </body>
 
