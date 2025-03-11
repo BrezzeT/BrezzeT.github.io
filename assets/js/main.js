@@ -1,14 +1,201 @@
 // Проверка инициализации
 console.log('main.js начал загрузку');
 
+// Функция для работы с пользовательскими настройками
+function getUserPreference(key, defaultValue) {
+    if (isStorageAvailable('localStorage')) {
+        try {
+            const value = localStorage.getItem(key);
+            return value !== null ? value : defaultValue;
+        } catch (e) {
+            console.warn('Error accessing localStorage:', e);
+            return defaultValue;
+        }
+    }
+    return defaultValue;
+}
+
+// Функция инициализации модальных окон
+function initModals() {
+    console.log('Инициализация модальных окон');
+    
+    // Находим все модальные окна и кнопки
+    const modals = {
+        trailer: document.getElementById('trailer-modal'),
+        preorder: document.getElementById('preorder-modal')
+    };
+    
+    const buttons = {
+        trailer: document.querySelector('[data-modal="trailer"]'),
+        preorder: document.querySelector('[data-modal="preorder"]')
+    };
+
+    console.log('Найденные элементы:', {
+        trailerModal: modals.trailer,
+        preorderModal: modals.preorder,
+        trailerButton: buttons.trailer,
+        preorderButton: buttons.preorder
+    });
+
+    // URL трейлера
+    const trailerUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
+
+    function openModal(modalId) {
+        const modal = modals[modalId];
+        if (!modal) {
+            console.error('Modal not found:', modalId);
+            return;
+        }
+
+        console.log('Opening modal:', modalId);
+        
+        // Получаем текущую позицию скролла
+        const scrollY = window.scrollY;
+        const viewportHeight = window.innerHeight;
+        
+        // Блокируем скролл и компенсируем сдвиг
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = '100%';
+        
+        // Устанавливаем модальное окно по центру текущего viewport
+        modal.style.top = `${scrollY}px`;
+        modal.style.height = `${viewportHeight}px`;
+        
+        // Показываем модальное окно
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.classList.add('active');
+            
+            // Если это трейлер, загружаем видео
+            if (modalId === 'trailer') {
+                const iframe = modal.querySelector('iframe');
+                if (iframe) {
+                    iframe.src = trailerUrl;
+                }
+            }
+        }, 10);
+    }
+
+    function closeModal(modal) {
+        if (!modal) return;
+        
+        console.log('Closing modal');
+        
+        // Получаем сохраненную позицию скролла
+        const scrollY = Math.abs(parseInt(document.body.style.top || '0'));
+        
+        // Убираем активный класс
+        modal.classList.remove('active');
+        
+        // Восстанавливаем состояние страницы
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        window.scrollTo(0, scrollY);
+        
+        // Очищаем стили модального окна
+        modal.style.top = '';
+        modal.style.height = '';
+        
+        // Если это трейлер, очищаем src у iframe после закрытия
+        if (modal.classList.contains('trailer-modal')) {
+            const iframe = modal.querySelector('iframe');
+            if (iframe) {
+                setTimeout(() => {
+                    iframe.src = '';
+                }, 300);
+            }
+        }
+
+        // Скрываем модальное окно после анимации
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+
+    // Добавляем обработчики для кнопок
+    if (buttons.trailer) {
+        console.log('Adding trailer button handler');
+        buttons.trailer.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal('trailer');
+        });
+    }
+
+    if (buttons.preorder) {
+        console.log('Adding preorder button handler');
+        buttons.preorder.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal('preorder');
+        });
+    }
+
+    // Добавляем обработчики для закрытия
+    document.querySelectorAll('.close-modal').forEach(closeBtn => {
+        closeBtn.addEventListener('click', () => {
+            const modal = closeBtn.closest('.modal');
+            closeModal(modal);
+        });
+    });
+
+    // Закрытие по клику вне модального окна
+    Object.values(modals).forEach(modal => {
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal(modal);
+                }
+            });
+        }
+    });
+
+    // Закрытие по Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            Object.values(modals).forEach(modal => {
+                if (modal && modal.classList.contains('active')) {
+                    closeModal(modal);
+                }
+            });
+        }
+    });
+
+    // Обработка формы предзаказа
+    const preorderForm = document.getElementById('preorder-form');
+    if (preorderForm) {
+        preorderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(preorderForm);
+            
+            // Валидация формы
+            let isValid = true;
+            formData.forEach((value, key) => {
+                if (!value) isValid = false;
+            });
+
+            if (isValid) {
+                alert('Спасибо за предзаказ! Мы свяжемся с вами в ближайшее время.');
+                preorderForm.reset();
+                closeModal(modals.preorder);
+            } else {
+                alert('Пожалуйста, заполните все поля формы.');
+            }
+        });
+    }
+}
+
 // Функция инициализации всех компонентов
 function initializeComponents() {
     console.log('Начало инициализации компонентов');
     
+    // Инициализируем модальные окна
+    initModals();
+    
     // Mobile menu functionality
     const menuBtn = document.querySelector('.menu-btn');
     const nav = document.querySelector('nav');
-    let menuOpen = false;
+    let menuOpen = getUserPreference('menuOpen', 'false') === 'true';
 
     if (menuBtn && nav) {
         console.log('Меню найдено и инициализировано');
@@ -95,6 +282,7 @@ function initializeComponents() {
         menuBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             menuOpen = !menuOpen;
+            setLocalPreference('menuOpen', menuOpen.toString());
             nav.classList.toggle('active');
             menuBtn.classList.toggle('active');
         });
@@ -157,153 +345,6 @@ function initializeComponents() {
 
         window.addEventListener('scroll', handleScroll);
         handleScroll(); // Проверяем видимость при загрузке страницы
-
-        // Функционал модальных окон
-        document.addEventListener('DOMContentLoaded', () => {
-            const modals = {
-                trailer: document.getElementById('trailer-modal'),
-                preorder: document.getElementById('preorder-modal')
-            };
-            
-            const buttons = {
-                trailer: document.querySelector('[data-modal="trailer"]'),
-                preorder: document.querySelector('[data-modal="preorder"]')
-            };
-
-            // URL трейлера (замените на реальный URL вашего трейлера)
-            const trailerUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
-
-            function openModal(modalId) {
-                const modal = modals[modalId];
-                if (!modal) return;
-
-                // Получаем текущую позицию скролла
-                const scrollY = window.scrollY;
-                const viewportHeight = window.innerHeight;
-                
-                // Блокируем скролл и компенсируем сдвиг
-                document.body.style.position = 'fixed';
-                document.body.style.top = `-${scrollY}px`;
-                document.body.style.width = '100%';
-                
-                // Устанавливаем модальное окно по центру текущего viewport
-                modal.style.top = `${scrollY}px`;
-                modal.style.height = `${viewportHeight}px`;
-                
-                // Показываем модальное окно
-                requestAnimationFrame(() => {
-                    modal.classList.add('active');
-                    
-                    // Если это трейлер, загружаем видео
-                    if (modalId === 'trailer') {
-                        const iframe = modal.querySelector('iframe');
-                        if (iframe) {
-                            iframe.src = trailerUrl;
-                        }
-                    }
-                });
-            }
-
-            function closeModal(modal) {
-                if (!modal) return;
-                
-                // Получаем сохраненную позицию скролла
-                const scrollY = Math.abs(parseInt(document.body.style.top || '0'));
-                
-                // Убираем активный класс
-                modal.classList.remove('active');
-                
-                // Восстанавливаем состояние страницы
-                document.body.style.position = '';
-                document.body.style.width = '';
-                document.body.style.top = '';
-                window.scrollTo(0, scrollY);
-                
-                // Очищаем стили модального окна
-                modal.style.top = '';
-                modal.style.height = '';
-                
-                // Если это трейлер, очищаем src у iframe после закрытия
-                if (modal.classList.contains('trailer-modal')) {
-                    const iframe = modal.querySelector('iframe');
-                    if (iframe) {
-                        setTimeout(() => {
-                            iframe.src = '';
-                        }, 300);
-                    }
-                }
-            }
-
-            // Функция для получения ширины скроллбара
-            function getScrollbarWidth() {
-                return window.innerWidth - document.documentElement.clientWidth;
-            }
-
-            // Обработчики для кнопок
-            Object.keys(buttons).forEach(key => {
-                const button = buttons[key];
-                if (button) {
-                    button.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        openModal(key);
-                    });
-                }
-            });
-
-            // Закрытие по клику на крестик
-            document.querySelectorAll('.close-modal').forEach(closeBtn => {
-                closeBtn.addEventListener('click', () => {
-                    const modal = closeBtn.closest('.modal');
-                    closeModal(modal);
-                });
-            });
-
-            // Закрытие по клику вне модального окна
-            Object.values(modals).forEach(modal => {
-                if (modal) {
-                    modal.addEventListener('click', (e) => {
-                        if (e.target === modal) {
-                            closeModal(modal);
-                        }
-                    });
-                }
-            });
-
-            // Закрытие по Escape
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    Object.values(modals).forEach(modal => {
-                        if (modal && modal.classList.contains('active')) {
-                            closeModal(modal);
-                        }
-                    });
-                }
-            });
-
-            // Обработка формы предзаказа
-            const preorderForm = document.getElementById('preorder-form');
-            if (preorderForm) {
-                preorderForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const formData = new FormData(preorderForm);
-                    
-                    // Здесь можно добавить валидацию формы
-                    let isValid = true;
-                    formData.forEach((value, key) => {
-                        if (!value) isValid = false;
-                    });
-
-                    if (isValid) {
-                        // Здесь можно добавить отправку данных на сервер
-                        alert('Спасибо за предзаказ! Мы свяжемся с вами в ближайшее время.');
-                        preorderForm.reset();
-                        closeModal(modals.preorder);
-                    } else {
-                        alert('Пожалуйста, заполните все поля формы.');
-                    }
-                });
-            }
-        });
 
         // Оптимизация производительности
         const throttle = (func, limit) => {
