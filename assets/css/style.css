@@ -769,69 +769,156 @@ header nav ul li.btn a:hover {
 
   .menu-btn {
     display: flex;
+    z-index: 1002;
   }
 
   header nav {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100%;
+    right: -100%;
+    width: 80%;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.95);
-    display: none;
+    background: rgba(0, 25, 77, 0.95);
+    backdrop-filter: blur(10px);
+    transition: right 0.3s ease;
     padding: 80px 20px 20px;
-    box-sizing: border-box;
+    z-index: 1001;
   }
 
   header nav.active {
-    display: block;
+    right: 0;
   }
 
   header nav ul {
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
   }
 
   header nav ul li {
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.4s forwards;
+    width: 100%;
+    text-align: center;
   }
 
   header nav ul li.btn {
-    margin-left: 0;
-    margin-top: 20px;
+    margin: 20px 0;
   }
 
   header nav ul li.btn a {
-    width: 200px;
-    text-align: center;
+    width: 100%;
+    display: block;
   }
 
+  /* Улучшаем отзывчивость для мобильных устройств */
   .hero {
+    padding: 20px 0;
     flex-direction: column;
-    text-align: center;
   }
 
   .hero__info {
-    width: 100%;
-    padding-top: 30px;
+    padding: 30px 20px;
+    margin: 0;
+    min-height: auto;
   }
 
-  .hero img {
-    position: relative;
-    top: 0;
-    width: 80%;
-    margin: 30px auto;
+  .hero__info h1 {
+    font-size: 2rem;
+  }
+
+  .hero__info p {
+    font-size: 1rem;
+  }
+
+  .features-list {
+    grid-template-columns: 1fr;
+  }
+
+  .new-game__content {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .new-game__image {
+    margin-top: 30px;
+  }
+
+  .game-icons-animation {
+    display: none;
+  }
+
+  /* Улучшаем отображение карточек игр */
+  .games-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 10px;
+  }
+
+  .game-card {
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  /* Улучшаем футер для мобильных */
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+/* Добавляем стили для планшетов */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero {
+    padding: 40px 0;
+  }
+
+  .hero__info {
+    padding: 40px;
   }
 
   .games-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .footer-content {
-    grid-template-columns: 1fr;
+  .new-game__content {
+    padding: 30px;
+  }
+}
+
+/* Оптимизация для маленьких экранов */
+@media (max-width: 480px) {
+  .hero__info h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero__info h2 {
+    font-size: 1.2rem;
+  }
+
+  .new-game__features {
+    flex-direction: column;
+  }
+
+  .feature {
+    width: 100%;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 15px;
   }
 }
 

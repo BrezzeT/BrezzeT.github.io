@@ -646,4 +646,45 @@ window.addEventListener('load', initGameIconsAnimation);
 document.addEventListener('DOMContentLoaded', () => {
     initGameIconsAnimation();
     // ... existing initialization code ...
+});
+
+// Мобильная навигация
+const menuBtn = document.querySelector('.menu-btn');
+const nav = document.querySelector('header nav');
+const navLinks = document.querySelectorAll('header nav ul li a');
+
+// Функция для переключения меню
+function toggleMenu() {
+    menuBtn.classList.toggle('active');
+    nav.classList.toggle('active');
+    document.body.classList.toggle('no-scroll');
+}
+
+// Обработчик клика по кнопке меню
+menuBtn.addEventListener('click', toggleMenu);
+
+// Закрытие меню при клике по ссылке
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        menuBtn.classList.remove('active');
+        nav.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+    });
+});
+
+// Закрытие меню при клике вне навигации
+document.addEventListener('click', (e) => {
+    if (!nav.contains(e.target) && !menuBtn.contains(e.target) && nav.classList.contains('active')) {
+        toggleMenu();
+    }
+});
+
+// Предотвращение скролла при открытом меню
+document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+
+// Обработка изменения размера окна
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && nav.classList.contains('active')) {
+        toggleMenu();
+    }
 }); 
