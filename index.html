@@ -225,16 +225,18 @@
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 99999;
-            display: none;
+            width: 100%;
+            height: 100%;
+            background: var(--modal-bg);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            justify-content: center;
             align-items: center;
             justify-content: center;
             padding: 20px;
             box-sizing: border-box;
-            overflow-y: auto;
         }
         
         .modal.active {
@@ -243,22 +245,23 @@
         
         .modal-content {
             position: relative;
-            background: rgba(28, 59, 69, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 800px;
-            width: 100%;
-            color: #fff;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transform: scale(0.8) translateY(20px);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
             margin: auto;
+            color: #333;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            will-change: transform, opacity;
         }
         
         .modal.active .modal-content {
-            transform: scale(1) translateY(0);
             opacity: 1;
         }
         
@@ -1168,149 +1171,51 @@
         <div class="gradient-overlay"></div>
         
         <div class="hero container">
-            <div class="hero__container">
-                <!-- Добавляем фоновые элементы -->
-                <div class="particles">
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                </div>
-                
-                <div class="glow-lines">
-                    <div class="glow-line"></div>
-                    <div class="glow-line"></div>
-                    <div class="glow-line"></div>
-                    <div class="glow-line"></div>
-                </div>
-                
-                <div class="geometric-bg">
-                    <div class="geometric-shape shape-1"></div>
-                    <div class="geometric-shape shape-2"></div>
-                    <div class="geometric-shape shape-3"></div>
-                </div>
-                
-                <div class="hero__info">
-                    <h2>Gaming World</h2>
-                    <h1>Discover Amazing Games and Join the Adventure</h1>
-                    <p>Experience the thrill of gaming with our collection of popular titles. From action-packed shooters to immersive RPGs, find your next favorite game here. Join our growing community of gamers and participate in exciting tournaments with amazing prizes!</p>
-                    
-                    <div class="features-list">
-                        <div class="feature-item">
-                            <span class="feature-icon">🎮</span>
-                            <span class="feature-text">Множество жанров</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🏆</span>
-                            <span class="feature-text">Турниры</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">👥</span>
-                            <span class="feature-text">Сообщество</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🎁</span>
-                            <span class="feature-text">Бонусы</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🌟</span>
-                            <span class="feature-text">Достижения</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🔥</span>
-                            <span class="feature-text">Топ игры</span>
-                        </div>
+            <div class="hero__info">
+                <h2>Gaming World</h2>
+                <h1>Discover Amazing Games and Join the Adventure</h1>
+                <p>Experience the thrill of gaming with our collection of popular titles. From action-packed shooters to immersive RPGs, find your next favorite game here.</p>
+                <button class="btn">Explore Games</button>
+            </div>
+            <div class="hero__info-right">
+                <div class="game-icons-animation">
+                    <canvas id="connectionCanvas"></canvas>
+                    <div class="game-icon" style="--delay: 0s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M21,6H3A2,2 0 0,0 1,8V16A2,2 0 0,0 3,18H21A2,2 0 0,0 23,16V8A2,2 0 0,0 21,6M21,16H3V8H21M6,15H8V13H10V11H8V9H6V11H4V13H6M14.5,12A1.5,1.5 0 0,1 16,13.5A1.5,1.5 0 0,1 14.5,15A1.5,1.5 0 0,1 13,13.5A1.5,1.5 0 0,1 14.5,12M18.5,9A1.5,1.5 0 0,1 20,10.5A1.5,1.5 0 0,1 18.5,12A1.5,1.5 0 0,1 17,10.5A1.5,1.5 0 0,1 18.5,9Z"/></svg>
                     </div>
-                    
-                    <button class="btn">Explore Games</button>
-                </div>
-                <div class="hero__image">
-                    <div class="game-icons-animation">
-                        <canvas id="connectionCanvas"></canvas>
-                        <div class="game-icon" style="--delay: 0s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 1s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M21,6H3C1.9,6,1,6.9,1,8v8c0,1.1,0.9,2,2,2h18c1.1,0,2-0.9,2-2V8C23,6.9,22.1,6,21,6z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 2s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12,2L1,21h22L12,2z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 3s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M21,5H3C1.9,5,1,5.9,1,7v10c0,1.1,0.9,2,2,2h18c1.1,0,2-0.9,2-2V7C23,5.9,22.1,5,21,5z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 4s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 5s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M15,3l2.3,2.3l-2.89,2.87l1.42,1.42L18.7,6.7L21,9V3H15z M3,9l2.3-2.3l2.87,2.89l1.42-1.42L6.7,5.3L9,3H3V9z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 6s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12,17.27L18.18,21l-1.64-7.03L22,9.24l-7.19-0.61L12,2L9.19,8.63L2,9.24l5.46,4.73L5.82,21L12,17.27z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 7s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M10,16.5v-9l6,4.5L10,16.5z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 8s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M7,5h2V3H7v2z M7,11h2V9H7v2z M7,17h2v-2H7v2z M11,11h2V9h-2v2z M11,17h2v-2h-2v2z M11,3v2h2V3H11z M15,5h2V3h-2V5z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 9s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12,12c2.21,0,4-1.79,4-4s-1.79-4-4-4s-4,1.79-4,4s1.79,4,4,4s4-1.79,4-4z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 10s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19,3H5C3.89,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 11s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M17,10.5V7c0-0.55-0.45-1-1-1H4c-0.55,0-1,0.45-1,1v10c0,0.55,0.45,1,1,1h12c0.55,0,1-0.45,1-1v-3.5l4,4v-11L17,10.5z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 12s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M13,17h-2v-6h2V17z M13,9h-2V7h2V9z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 13s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19,9l1.25-2.75L23,5l-2.75-1.25L19,1l-1.25,2.75L15,5l2.75,1.25L19,9z M11.5,9.5L9,4L6.5,9.5L1,12l5.5,2.5L9,20l2.5-5.5L17,12L11.5,9.5z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 14s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12,3v10.55c-0.59-0.34-1.27-0.55-2-0.55c-2.21,0-4,1.79-4,4s1.79,4,4,4s4-1.79,4-4V7h4V3H12z"/>
-                            </svg>
-                        </div>
-                        <div class="game-icon" style="--delay: 15s;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M15,6H3v2h12V6z M15,10H3v2h12V10z M3,16h8v-2H3V16z M17,6v8.18C16.69,14.07,16.35,14,16,14c-1.66,0-3,1.34-3,3s1.34,3,3,3s3-1.34,3-3V8h3V6H17z"/>
-                            </svg>
-                        </div>
+                    <div class="game-icon" style="--delay: 1s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8.39C13.57,9.4 15.42,10 17.42,10C18.2,10 18.95,9.91 19.67,9.74C19.88,10.45 20,11.21 20,12C20,16.41 16.41,20 12,20C9,20 6.39,18.34 5,15.89L6.75,14V13A1.25,1.25 0 0,1 8,11.75A1.25,1.25 0 0,1 9.25,13V14H12M16,11.75A1.25,1.25 0 0,0 14.75,13A1.25,1.25 0 0,0 16,14.25A1.25,1.25 0 0,0 17.25,13A1.25,1.25 0 0,0 16,11.75Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 2s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6,7H18A5,5 0 0,1 23,12A5,5 0 0,1 18,17C16.36,17 14.91,16.21 14,15H10C9.09,16.21 7.64,17 6,17A5,5 0 0,1 1,12A5,5 0 0,1 6,7M19.75,9.5A1.25,1.25 0 0,0 18.5,10.75A1.25,1.25 0 0,0 19.75,12A1.25,1.25 0 0,0 21,10.75A1.25,1.25 0 0,0 19.75,9.5M17.25,12A1.25,1.25 0 0,0 16,13.25A1.25,1.25 0 0,0 17.25,14.5A1.25,1.25 0 0,0 18.5,13.25A1.25,1.25 0 0,0 17.25,12M5,9V11H3V13H5V15H7V13H9V11H7V9H5Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 3s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.97,16L5,19C4.67,19.3 4.23,19.5 3.75,19.5A1.75,1.75 0 0,1 2,17.75V17.5L3,10.12C3.21,7.81 5.14,6 7.5,6H16.5C18.86,6 20.79,7.81 21,10.12L22,17.5V17.75A1.75,1.75 0 0,1 20.25,19.5C19.77,19.5 19.33,19.3 19,19L16.03,16H7.97M7,8V10H5V11H7V13H8V11H10V10H8V8H7M16.5,8A0.75,0.75 0 0,0 15.75,8.75A0.75,0.75 0 0,0 16.5,9.5A0.75,0.75 0 0,0 17.25,8.75A0.75,0.75 0 0,0 16.5,8M14.75,9.75A0.75,0.75 0 0,0 14,10.5A0.75,0.75 0 0,0 14.75,11.25A0.75,0.75 0 0,0 15.5,10.5A0.75,0.75 0 0,0 14.75,9.75M18.25,9.75A0.75,0.75 0 0,0 17.5,10.5A0.75,0.75 0 0,0 18.25,11.25A0.75,0.75 0 0,0 19,10.5A0.75,0.75 0 0,0 18.25,9.75M16.5,11.5A0.75,0.75 0 0,0 15.75,12.25A0.75,0.75 0 0,0 16.5,13A0.75,0.75 0 0,0 17.25,12.25A0.75,0.75 0 0,0 16.5,11.5Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 4s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M21,11C21,16.55 17.16,21.74 12,23C6.84,21.74 3,16.55 3,11V5L12,1L21,5V11M12,21C15.75,20 19,15.54 19,11.22V6.3L12,3.18L5,6.3V11.22C5,15.54 8.25,20 12,21M15.05,16L11.97,14.15L8.9,16L9.71,12.5L7,10.16L10.58,9.85L11.97,6.55L13.37,9.85L16.95,10.16L14.23,12.5L15.05,16"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 5s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12,0C8.96,0 6.21,1.23 4.22,3.22L5.63,4.63C7.26,3 9.5,2 12,2C14.5,2 16.74,3 18.36,4.64L19.77,3.23C17.79,1.23 15.04,0 12,0M7.05,6.05L8.46,7.46C9.37,6.56 10.62,6 12,6C13.38,6 14.63,6.56 15.54,7.46L16.95,6.05C15.68,4.78 13.93,4 12,4C10.07,4 8.32,4.78 7.05,6.05M12,15A2,2 0 0,1 10,13A2,2 0 0,1 12,11A2,2 0 0,1 14,13A2,2 0 0,1 12,15M15,9H9A1,1 0 0,0 8,10V22A1,1 0 0,0 9,23H15A1,1 0 0,0 16,22V10A1,1 0 0,0 15,9Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 6s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H16L12,22L8,18H4A2,2 0 0,1 2,16V4A2,2 0 0,1 4,2M4,4V16H8.83L12,19.17L15.17,16H20V4H4M6,7H18V9H6V7M6,11H16V13H6V11Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 7s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M16.5,9A4.5,4.5 0 0,0 12,13.5A4.5,4.5 0 0,0 16.5,18A4.5,4.5 0 0,0 21,13.5A4.5,4.5 0 0,0 16.5,9M16.5,16.5A3,3 0 0,1 13.5,13.5A3,3 0 0,1 16.5,10.5A3,3 0 0,1 19.5,13.5A3,3 0 0,1 16.5,16.5M7.5,9A4.5,4.5 0 0,0 3,13.5A4.5,4.5 0 0,0 7.5,18A4.5,4.5 0 0,0 12,13.5A4.5,4.5 0 0,0 7.5,9M7.5,16.5A3,3 0 0,1 4.5,13.5A3,3 0 0,1 7.5,10.5A3,3 0 0,1 10.5,13.5A3,3 0 0,1 7.5,16.5M3,4V7H6V4H3M21,4V7H18V4H21Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 8s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7,6H17A6,6 0 0,1 23,12A6,6 0 0,1 17,18C15.22,18 13.63,17.23 12.53,16H11.47C10.37,17.23 8.78,18 7,18A6,6 0 0,1 1,12A6,6 0 0,1 7,6M6,9V11H4V13H6V15H8V13H10V11H8V9H6M15.5,12A1.5,1.5 0 0,0 14,13.5A1.5,1.5 0 0,0 15.5,15A1.5,1.5 0 0,0 17,13.5A1.5,1.5 0 0,0 15.5,12M18.5,9A1.5,1.5 0 0,0 17,10.5A1.5,1.5 0 0,0 18.5,12A1.5,1.5 0 0,0 20,10.5A1.5,1.5 0 0,0 18.5,9Z"/></svg>
+                    </div>
+                    <div class="game-icon" style="--delay: 9s">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/></svg>
                     </div>
                 </div>
             </div>
+            <picture>
+                <source srcset="assets/images/webp/joystik.webp" type="image/webp">
+                <img src="assets/images/joystik.svg" alt="" loading="eager" width="500" height="500">
+            </picture>
         </div>
 
         <section class="popular-games container">
@@ -1413,13 +1318,10 @@
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
                 <div class="video-container">
-                    <!-- Заменяем iframe на div-заглушку -->
-                    <div id="video-placeholder" class="video-placeholder">
-                        <button class="play-video-btn">
-                            <span class="play-icon">▶</span>
-                            <span>Смотреть трейлер</span>
-                        </button>
-                    </div>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                            title="Cyber Adventure 2077 Trailer" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -1514,162 +1416,33 @@
         <div class="particle"></div>
     </div>
 
-    <!-- Оптимизированный JavaScript -->
+    <!-- Отложенная загрузка JavaScript -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const modals = {
-                trailer: document.getElementById('trailer-modal'),
-                preorder: document.getElementById('preorder-modal')
+        // Проверка загрузки JavaScript
+        window.addEventListener('error', function(e) {
+            if (e.target.tagName === 'SCRIPT') {
+                console.error('Ошибка загрузки скрипта:', e.target.src);
+            }
+        }, true);
+
+        // Динамическая загрузка основного скрипта
+        function loadMainScript() {
+            var script = document.createElement('script');
+            script.src = 'assets/js/main.js';
+            script.onload = function() {
+                console.log('main.js успешно загружен');
+                if (typeof initGameIconsAnimation === 'function') {
+                    initGameIconsAnimation();
+                }
             };
-            
-            const buttons = {
-                trailer: document.querySelector('[data-modal="trailer"]'),
-                preorder: document.querySelector('[data-modal="preorder"]')
+            script.onerror = function() {
+                console.error('Ошибка загрузки main.js');
             };
+            document.body.appendChild(script);
+        }
 
-            function loadYouTubeVideo() {
-                const placeholder = document.getElementById('video-placeholder');
-                const videoContainer = placeholder.parentElement;
-                
-                const iframe = document.createElement('iframe');
-                iframe.src = "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&modestbranding=1";
-                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-                iframe.allowFullscreen = true;
-                
-                videoContainer.replaceChild(iframe, placeholder);
-            }
-
-            function openModal(modalId) {
-                const modal = modals[modalId];
-                if (!modal) return;
-                
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-                
-                requestAnimationFrame(() => {
-                    modal.classList.add('active');
-                });
-            }
-
-            function closeModal(modal) {
-                if (!modal) return;
-                
-                modal.classList.remove('active');
-                
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    document.body.style.overflow = '';
-                }, 300);
-            }
-
-            // Обработчики для кнопок
-            Object.entries(buttons).forEach(([type, button]) => {
-                if (button) {
-                    button.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        openModal(type);
-                    });
-                }
-            });
-
-            // Загрузка видео по клику на плейсхолдер
-            document.addEventListener('click', (e) => {
-                if (e.target.closest('.video-placeholder')) {
-                    loadYouTubeVideo();
-                }
-            });
-
-            // Закрытие по крестику
-            document.querySelectorAll('.close-modal').forEach(closeBtn => {
-                closeBtn.addEventListener('click', () => {
-                    const modal = closeBtn.closest('.modal');
-                    closeModal(modal);
-                });
-            });
-
-            // Закрытие по клику вне окна
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        closeModal(modal);
-                    }
-                });
-            });
-
-            // Закрытие по Escape
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    document.querySelectorAll('.modal.active').forEach(closeModal);
-                }
-            });
-
-            // Обработка формы предзаказа
-            const preorderForm = document.getElementById('preorder-form');
-            if (preorderForm) {
-                preorderForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    alert('Спасибо за предзаказ! Мы свяжемся с вами в ближайшее время.');
-                    preorderForm.reset();
-                    closeModal(modals.preorder);
-                });
-            }
-        });
-    </script>
-
-    <!-- Анимация соединений между иконками -->
-    <script>
-        // Анимация соединений между иконками
-        document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('connectionCanvas');
-            const ctx = canvas.getContext('2d');
-            const icons = document.querySelectorAll('.game-icon');
-            
-            function resizeCanvas() {
-                const container = canvas.parentElement;
-                canvas.width = container.offsetWidth;
-                canvas.height = container.offsetHeight;
-            }
-            
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            
-            function drawConnections() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.strokeStyle = 'rgba(255, 230, 0, 0.2)';
-                ctx.lineWidth = 2;
-                
-                icons.forEach((icon, i) => {
-                    const rect1 = icon.getBoundingClientRect();
-                    const containerRect = canvas.parentElement.getBoundingClientRect();
-                    
-                    const x1 = rect1.left + rect1.width/2 - containerRect.left;
-                    const y1 = rect1.top + rect1.height/2 - containerRect.top;
-                    
-                    icons.forEach((otherIcon, j) => {
-                        if (i < j) {
-                            const rect2 = otherIcon.getBoundingClientRect();
-                            const x2 = rect2.left + rect2.width/2 - containerRect.left;
-                            const y2 = rect2.top + rect2.height/2 - containerRect.top;
-                            
-                            const distance = Math.hypot(x2-x1, y2-y1);
-                            if (distance < 200) {
-                                ctx.beginPath();
-                                ctx.moveTo(x1, y1);
-                                ctx.lineTo(x2, y2);
-                                ctx.stroke();
-                            }
-                        }
-                    });
-                });
-            }
-            
-            function animate() {
-                drawConnections();
-                requestAnimationFrame(animate);
-            }
-            
-            animate();
-        });
+        // Загружаем скрипт после загрузки DOM
+        document.addEventListener('DOMContentLoaded', loadMainScript);
     </script>
 </body>
 
